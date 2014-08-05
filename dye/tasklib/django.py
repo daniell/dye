@@ -327,3 +327,17 @@ def _manage_py_jenkins():
     if not env['quiet']:
         print "### Running django-jenkins, with args; %s" % args
     _manage_py(args, cwd=env['vcs_root_dir'])
+
+
+def create_uploads_dir(environment=None):
+    if environment is None:
+        environment = _infer_environment()
+    uploads_dir_path = path.join(env['django_dir'], 'uploads')
+    filer_dir_path = path.join(uploads_dir_path, 'filer_public')
+    filer_thumbnails_dir_path = path.join(uploads_dir_path, 'filer_public_thumbnails')
+    if environment in ['dev_server', 'staging', 'production']:
+        owner = 'apache:apache'
+    else:
+        owner = None
+    for dir_path in (uploads_dir_path, filer_dir_path, filer_thumbnails_dir_path):
+        util._create_dir_if_not_exists(dir_path, owner=owner)
