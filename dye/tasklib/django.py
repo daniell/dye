@@ -7,7 +7,7 @@ import subprocess
 from .exceptions import TasksError
 from .database import get_db_manager
 from .exceptions import InvalidProjectError, ShellCommandError
-from .util import _check_call_wrapper
+from .util import _check_call_wrapper, _create_dir_if_not_exists
 # global dictionary for state
 from .environment import env
 
@@ -340,4 +340,4 @@ def create_uploads_dir(environment=None):
     else:
         owner = None
     for dir_path in (uploads_dir_path, filer_dir_path, filer_thumbnails_dir_path):
-        util._create_dir_if_not_exists(dir_path, owner=owner)
+        _create_dir_if_not_exists(dir_path, owner=owner)
