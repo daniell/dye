@@ -65,7 +65,12 @@ class SqliteManager(DBManager):
 
     def test_sql_user_password(self, user=None, password=None):
         # try to connect
-        conn = sqlite3.connect(self.file_path)
+        try:
+            conn = sqlite3.connect(self.file_path)
+        except Exception as e:
+            raise Exception("Failed to open database file: %s: %s" %
+                (self.file_path, e))
+
         try:
             result = conn.execute("select 1")
             return len(list(result.fetchall())) != 0
