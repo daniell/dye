@@ -204,7 +204,8 @@ class UpdateVE(object):
         # install the pip requirements and exit
         pip_path = path.join(self.ve_dir, 'bin', 'pip')
         # first ensure we have an up to date version of distribute
-        command = [pip_path, 'install', '-U', 'distribute'] + pypi_cache_args
+        command = ([pip_path, 'install', '-U', 'distribute', 'pip-accel'] +
+            pypi_cache_args)
 
         try:
             pip_retcode = subprocess.call(command)
@@ -215,6 +216,9 @@ class UpdateVE(object):
         if pip_retcode != 0:
             print "command failed: %s" % " ".join(command)
             return pip_retcode
+
+        # Now pip-accel is installed, so switch to using it.
+        pip_path = path.join(self.ve_dir, 'bin', 'pip-accel')
 
         # use cwd to allow relative path specs in requirements file, e.g. ../tika
         command = [pip_path, 'install', '--requirement=%s' % self.requirements] + pypi_cache_args
