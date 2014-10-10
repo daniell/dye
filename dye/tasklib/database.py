@@ -422,21 +422,6 @@ class MySQLManager(DBManager):
                     (' '.join(restore_cmd), dump_filename)
             _call_command(restore_cmd, stdin=dump_file)
 
-    def create_dbdump_cron_file(self, cron_file, dump_file_stub):
-        # write something like:
-        # #!/bin/sh
-        # /usr/bin/mysqldump --user=projectname --password=aptivate --host=127.0.0.1 projectname >  /var/projectname/dumps/daily-dump-`/bin/date +\%d`.sql
-        #
-        # cron file should be an open file like object
-
-        # don't use "with" for compatibility with python 2.3 on whov2hinari
-        cron_file.write('#!/bin/sh\n')
-        cron_file.write('/usr/bin/mysqldump ' +
-                        ' '.join(self.create_cmdline_args()))
-        cron_file.write(' > %s' % dump_file_stub)
-        cron_file.write(r'`/bin/date +\%d`.sql')
-        cron_file.write('\n')
-
 
 def get_db_manager(engine, **kwargs):
     if engine.lower() == 'mysql':
